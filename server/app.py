@@ -39,6 +39,7 @@ class Questions(db.Model):
     visibility = db.Column(db.String(200))
     type = db.Column(db.String(200))
     qtext = db.Column(db.Text())
+    answers = db.relationship('Answers', backref='Question')
 
     def __init__(self, title, library, reviewed, visibility, type, qtext):
         self.title = title
@@ -128,6 +129,14 @@ def delete_question(id):
     db.session.commit()
     return 'deleted'
 
+class Answers(db.Model):
+    __tablename__ = 'answers'
+    id = db.Column(db.Integer, primary_key=True)
+    rank = db.Column(db.Integer)
+    isCorrect = db.Column(db.Boolean)
+    answer = db.Column(db.Text())
+    feedback = db.Column(db.Text())
+    question_id = db.Column(db.Integer, db.ForeignKey('questions.id'))
 
 if __name__ == '__main__': 
     app.run()
