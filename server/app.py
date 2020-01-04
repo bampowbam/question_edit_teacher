@@ -90,7 +90,7 @@ def add_question():
 
         print(title, library, reviewed, visibility, type, qtext)
         question = Questions(title, library, reviewed, visibility, type, qtext)
-        db.session.add(data)
+        db.session.add(question)
         db.session.commit()
         return question_schema.jsonify(question)
 
@@ -137,6 +137,39 @@ class Answers(db.Model):
     answer = db.Column(db.Text())
     feedback = db.Column(db.Text())
     question_id = db.Column(db.Integer, db.ForeignKey('questions.id'))
+
+    def __init__(self, rank, isCorrect, answer, feedback, question_id):
+        self.rank = rank
+        self.isCorrect = isCorrect
+        self.answer = answer
+        self.feedback = feedback
+        self.question_id = question_id
+    
+#Question Schema
+class AnswerSchema(ma.Schema):
+    class Meta:
+        fields = ('id','rank','isCorrect','answer','feedback','question_id')
+
+#Init Schema
+answer_schema = AnswerSchema()
+answers_schema = AnswerSchema(many=True)
+
+#@app.route("/") is a decorator which adds an endpoint to the app object. 
+#It doesn't actually modify any behavior of the function, and is instead sugar to simplify the process.
+@app.route('/answer', methods=['POST'])
+def add_answer():
+    if request.method == 'POST':
+        rank = request.json['rank']
+        isCorrect = request.json['isCorrect']
+        answer = request.json['answer']
+        feedback = request.json['feedback']
+        question_id = request.json['question_id']
+
+        print(rank, isCorrect, answer, feedback, question_id)
+        answer = Answers(rank, isCorrect, answer, feedback, question_id)
+        db.session.add(answer)
+        db.session.commit()
+        return answer_schema.jsonify(answer)
 
 if __name__ == '__main__': 
     app.run()
