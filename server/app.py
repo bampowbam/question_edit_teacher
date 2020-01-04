@@ -145,7 +145,7 @@ class Answers(db.Model):
         self.feedback = feedback
         self.question_id = question_id
     
-#Question Schema
+#Answer Schema
 class AnswerSchema(ma.Schema):
     class Meta:
         fields = ('id','rank','isCorrect','answer','feedback','question_id')
@@ -170,6 +170,54 @@ def add_answer():
         db.session.add(answer)
         db.session.commit()
         return answer_schema.jsonify(answer)
+
+#Get All Answers
+@app.route('/get-answers', methods=['GET'])
+#design pattern in Python that allows a user to add 
+#new functionality to an existing object without modifying its structure.
+def get_answers():
+    all_answers = Answers.query.all()
+    result = answers_schema.dump(all_answers)
+    return jsonify(result)
+
+#Get Single answer
+@app.route('/get-answer/<id>', methods=['GET'])
+#design pattern in Python that allows a user to add 
+#new functionality to an existing object without modifying its structure.
+def get_single_answer(id):
+    answer = Answers.query.get(id)
+    return answer_schema.jsonify(answer)
+
+#Update an answer
+@app.route('/answer/<id>', methods=['PUT'])
+def update_answer(id):
+    if request.method == 'PUT':
+        answer = Answers.query.get(id)
+        rank = request.json['rank']
+        isCorrect = request.json['isCorrect']
+        answer_2 = request.json['answer']
+        feedback = request.json['feedback']
+        question_id = request.json['question_id']
+
+        answer.rank = rank
+        answer.isCorrect = isCorrect
+        answer.answer = answer_2
+        answer.feedback = feedback
+        answer.question_id = question_id
+
+        db.session.commit()
+
+        return answer_schema.jsonify(answer)
+
+#Delete Single answer
+@app.route('/delete-answer/<id>', methods=['DELETE'])
+#design pattern in Python that allows a user to add 
+#new functionality to an existing object without modifying its structure.
+def delete_answer(id):
+    answer = Answers.query.get(id)
+    db.session.delete(answer)
+    db.session.commit()
+    return 'deleted'
 
 if __name__ == '__main__': 
     app.run()
