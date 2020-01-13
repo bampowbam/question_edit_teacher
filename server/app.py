@@ -8,14 +8,14 @@ import os
 
 app = Flask(__name__)
 
-ENV = 'dev'
+ENV = 'prod'
    
 if ENV == 'dev':
     app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:S9emub7v@localhost/teacher'
 else:
     app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://xkbosnnjreognb:9a4eac938ed3590f1931315bd185efa3f8d98ce6c6ace26160c298402ae19be8@ec2-54-235-104-136.compute-1.amazonaws.com:5432/dckefpmha2quh8'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://hhikqaanmzcfjg:36bff290c5b4e6cf01189cf2616c6e373bbaddaa92b0fbab5c63033e439fb628@ec2-174-129-33-13.compute-1.amazonaws.com:5432/d5sltbi85mlg6v'
 
 app.config['SQLALCHEMY_TRACK_MODICATIONS'] = False
 
